@@ -24,4 +24,7 @@ function getFollowersForUser(username) {
     .catch( err => console.error(err));
 }
 
-module.exports = getFollowersForUser;
+module.exports = {
+  getFollowersForUser,
+  getFollowedByCount
+};

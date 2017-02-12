@@ -1,1 +1,1 @@
-worker: node myFollowers.js
+worker: npm start

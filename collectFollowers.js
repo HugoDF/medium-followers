@@ -1,4 +1,4 @@
-const getFollowersForUser = require('./medium/getFollowersForUser');
+const { getFollowersForUser } = require('./medium/getFollowersForUser');
 const logToRedis = require('./db/logToRedis');
 
 let username = 'hugo__df';
