@@ -13,8 +13,9 @@
     "moment": "^2.17.1"
   },
   "scripts": {
-    "start": "node ./myFollowers.js"
+    "start": "node ./collectFollowers",
+    "graph": "node ./cli"
   },
-  "author": "",
-  "license": "UNLICENSED"
+  "author": "Hugo Di Francesco",
+  "license": "MIT"
 }

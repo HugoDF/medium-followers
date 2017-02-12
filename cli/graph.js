@@ -31,8 +31,7 @@ function renderDashboard({ x, y, minY }) {
   };
 }
 
-readValues(function (values) {
-
+function graphValues(values) {
   const { x, y, minY } = selectData(values);
 
   const renderDashboardWithData = renderDashboard({ x, y, minY });
@@ -40,5 +39,17 @@ readValues(function (values) {
   renderDashboardWithData();
 
   screen.on('resize', renderDashboardWithData);
+}
 
-});
+function run(REDIS_URL) {
+  readValues(
+    graphValues,
+    { REDIS_URL }
+  );
+}
+
+if(require.main === module) {
+  run(process.env.REDIS_URL);
+}
+
+module.exports = run;
