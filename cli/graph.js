@@ -15,6 +15,7 @@ function renderDashboard({ x, y, minY }) {
       },
       xLabelPadding: 3,
       xPadding: 5,
+      numYLabels: 25,
       showNthLabel: 5,
       label: 'Followers by date',
       minY
