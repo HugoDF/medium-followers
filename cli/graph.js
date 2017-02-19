@@ -4,7 +4,7 @@ const blessed = require('blessed');
 const contrib = require('blessed-contrib');
 const screen = blessed.screen();
 
-function renderDashboard({ x, y, minY }) {
+function renderDashboard({ x, y, minY, maxY }) {
   return () => {
     const line = contrib.line({
       style:
@@ -18,7 +18,8 @@ function renderDashboard({ x, y, minY }) {
       numYLabels: 25,
       showNthLabel: 5,
       label: 'Followers by date',
-      minY
+      maxY: maxY + 10,
+      minY: minY - 10
     });
 
     screen.append(line);
@@ -33,9 +34,8 @@ function renderDashboard({ x, y, minY }) {
 }
 
 function graphValues(values) {
-  const { x, y, minY } = selectData(values);
-
-  const renderDashboardWithData = renderDashboard({ x, y, minY });
+  const data = selectData(values);
+  const renderDashboardWithData = renderDashboard(data);
 
   renderDashboardWithData();
 

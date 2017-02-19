@@ -16,8 +16,12 @@ function selectData(rawValues, filterFn = (_, i) => (i % 100 === 0)) {
     y.reduce((prev, curr) => Math.min(prev, curr))
     :
     undefined;
+  const maxY = y.length > 0 ?
+    y.reduce((prev, curr) => Math.max(prev,curr))
+    :
+    undefined;
 
-  return { x, y, minY };
+  return { x, y, minY, maxY };
 }
 
 module.exports = selectData;
