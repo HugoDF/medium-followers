@@ -1,6 +1,7 @@
 {
   "name": "medium-followers",
   "version": "1.0.0",
+  "repository": "https://github.com/HugoDF/medium-followers",
   "description": "",
   "main": "collectFollowers.js",
   "dependencies": {
