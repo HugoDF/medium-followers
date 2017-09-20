@@ -1,5 +1,5 @@
 const { exec } = require('child_process');
-const command = `heroku config | grep REDIS_URL | cut -f2 -d' '`;
+const command = `heroku config:get REDIS_URL -a medium-stats | cut -f2 -d' '`;
 const runGraph = require('./graph');
 
 exec(command, (err, stdout, stderr) => {
