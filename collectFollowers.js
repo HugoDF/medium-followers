@@ -1,20 +1,45 @@
 const { getFollowersForUser } = require('./medium/getFollowersForUser');
-const logToRedis = require('./db/logToRedis');
+const { dbPromise } = require('./db/connect');
+const uuid = require('uuid/v4');
 
-let username = 'hugo__df';
-
-function main() {
-  getFollowersForUser(username)
-    .then( (count) => {
-      console.log(count);
-      logToRedis(count);
-    })
-    .catch( err => console.error(err) );
+async function main() {
+  const db = await dbPromise;
+  const users = await db.all('SELECT username, id FROM Users');
+  console.log(`Running follower count collection for ${users.length} users`);
+  return Promise.all(
+    users
+     .map((user) =>
+          getFollowersForUser(user.username)
+          .then(async (count) => {
+            const { number: currentFollowerCount } = await db.get('SELECT number FROM FollowerCount ORDER BY createdAt DESC');
+            if (currentFollowerCount !== count) {
+              await db.run(
+                `INSERT INTO FollowerCount (id, userId, number, createdAt)
+                  VALUES (?, ?, ?, ?)
+                `,
+                uuid(), user.id, count, Date.now()
+              );
+              console.log('Added new FollowerCount to DB');
+            }
+          })
+          .catch( err => console.error(err) )
+      )
+  );
 }
 
-main();
+function run() {
+  main();
+  setInterval(
+    main,
+    60000
+  );
 
-setInterval(
-  main,
-  60000
-);
+}
+
+if (require.main === module) {
+  run();
+}
+
+module.exports = {
+  run
+};
