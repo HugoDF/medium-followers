@@ -18,17 +18,16 @@ app.use(sessions({
   duration: 24 * 60 * 60 * 1000, // how long the session will stay valid in ms
   activeDuration: 1000 * 60 * 5
 }));
+
 const baseData = (req) => ({
-  isAuthed: Boolean(req.auth),
+  isAuthed: Boolean(req.auth && req.auth.id),
   auth: req.auth,
   MEDIUM_CLIENT_ID: process.env.MEDIUM_CLIENT_ID,
   MEDIUM_SECRET: process.env.MEDIUM_SECRET,
   MEDIUM_REDIRECT_URI: process.env.MEDIUM_REDIRECT_URI
 });
+
 app.get('/', (req, res) => {
-  if(req.auth) {
-    return res.redirect('/dashboard');
-  }
   res.render('landing', baseData(req));
 });
 
@@ -36,7 +35,7 @@ const addHours = require('date-fns/add_hours');
 const addDays = require('date-fns/add_days');
 
 app.get('/dashboard', async (req, res) => {
-  if(!req.auth) {
+  if(!req.auth || !req.auth.id) {
     res.redirect('/');
   }
   const db = await dbPromise;
@@ -58,12 +57,16 @@ app.get('/dashboard', async (req, res) => {
     'SELECT number FROM FollowerCount WHERE userId = ? AND createdAt < ?',
     req.auth.id, addDays(now, -1).getTime()
   ) || {};
+  const hourlyIncrease = hourlyFollowers !== '-' && `${currentFollowers - hourlyFollowers}`;
+  const dailyIncrease = dailyFollowers !== '-' && `${currentFollowers - dailyFollowers}`;
   res.render('dashboard', {
     ...baseData(req),
     data: {
       currentFollowers,
       hourlyFollowers,
-      dailyFollowers
+      hourlyIncrease,
+      dailyFollowers,
+      dailyIncrease
     }
   });
 });
@@ -88,8 +91,11 @@ app.get('/medium-oauth/callback', async (req, res) => {
     
     const resp = await axios.post(MEDIUM_BASE_URL + '/tokens', makeQueryString(postContent));
     const { access_token, refresh_token } = resp.data;
-    const meResp = await axios.get(MEDIUM_BASE_URL + '/me', { headers: {Authorization: `Bearer ${access_token}` }});
-    const { id, username, name, url, imageUrl } = meResp.data.data;
+    const userResp = (await axios.get(
+      MEDIUM_BASE_URL + '/me', 
+      { headers: { Authorization: `Bearer ${access_token}` } }
+    )).data;
+    const { id, username, name, url, imageUrl } = userResp.data;
     const db = await dbPromise;
     if (!await db.get('SELECT id from Users WHERE id = ?', id)) {
       await db.run(
@@ -102,13 +108,13 @@ app.get('/medium-oauth/callback', async (req, res) => {
     req.auth = {
       id, username, name, url, imageUrl
     };
-    res.redirect('/login/success');
+    res.redirect('/dashboard');
   }
 });
 
-app.get('/login/success', async (req, res) => {
-  res.render('login-success', baseData(req));
+app.get('/logout', (req, res) => {
+  req.auth.destroy();
+  res.redirect('/');
 });
-
 
 module.exports = app;

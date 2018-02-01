@@ -31,7 +31,7 @@ function run() {
   main();
   setInterval(
     main,
-    60000
+    process.env.REFRESH_RATE
   );
 
 }
