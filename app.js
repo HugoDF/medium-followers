@@ -42,19 +42,19 @@ app.get('/dashboard', async (req, res) => {
   const {
     number: currentFollowers
   } = await db.get(
-    'SELECT number FROM FollowerCount WHERE userId = ?', req.auth.id
+    'SELECT number FROM FollowerCount WHERE userId = ? ORDER BY createdAt DESC', req.auth.id
   ) || {};
   const now = Date.now();
   const {
     number: hourlyFollowers = '-'
   } = await db.get(
-    'SELECT number FROM FollowerCount WHERE userId = ? AND createdAt < ?',
+    'SELECT number FROM FollowerCount WHERE userId = ? AND createdAt < ? ORDER BY createdAt DESC',
     req.auth.id, addHours(now, -1).getTime()
   ) || {};
   const {
     number: dailyFollowers = '-'
   } = await db.get(
-    'SELECT number FROM FollowerCount WHERE userId = ? AND createdAt < ?',
+    'SELECT number FROM FollowerCount WHERE userId = ? AND createdAt < ? ORDER BY createdAt DESC',
     req.auth.id, addDays(now, -1).getTime()
   ) || {};
   const hourlyIncrease = hourlyFollowers !== '-' && `${currentFollowers - hourlyFollowers}`;
@@ -110,6 +110,12 @@ app.get('/medium-oauth/callback', async (req, res) => {
     };
     res.redirect('/dashboard');
   }
+});
+
+app.get('/login/medium', (req, res) => {
+  const oauthBaseUrl = 'https://medium.com/m/oauth/authorize?';
+  res.redirect('/');
+  // client_id={{MEDIUM_CLIENT_ID}}&scope=basicProfile&state={{MEDIUM_SECRET}}&response_type=code&redirect_uri={{MEDIUM_REDIRECT_URI}}
 });
 
 app.get('/logout', (req, res) => {
