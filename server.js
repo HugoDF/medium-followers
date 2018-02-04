@@ -1,5 +1,5 @@
 const app = require('./app');
-const followerCollector = require('./collectFollowers');
+const followerCollector = require('./collect-followers');
 // listen for requests :)
 const listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);

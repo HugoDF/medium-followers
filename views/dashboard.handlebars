@@ -4,5 +4,23 @@
 <ul>
   <li>Current number of followers: {{ data.currentFollowers }}</li>
   <li>Number of followers an hour ago: {{ data.hourlyFollowers }} {{ data.hourlyIncrease }}</li>
-  <li>Number of followers a day ago: {{ data.dailyFollowers }} {{ data.dailyIncreate }}</li>
+  <li>Number of followers a day ago: {{ data.dailyFollowers }} {{ data.dailyIncrease }}</li>
+  <li>Number of followers a week ago: {{ data.weeklyFollowers }} {{ data.weeklyIncrease }}</li>
 </ul>
+<div id="app">
+  \{{startDate}}
+  <div v-for="dataPoint in data">
+    \{{dataPoint}}
+  </div>
+</div>
+
+<script src="https://unpkg.com/vue@2.5.13/dist/vue.js"></script>
+<script>
+  const INITIAL_DATA = {{{ initialData }}};
+  const app = new Vue({
+    el: '#app',
+    data: function() {
+      return INITIAL_DATA;
+    }
+  });
+</script>

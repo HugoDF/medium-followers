@@ -1,4 +1,4 @@
-const { getFollowersForUser } = require('./medium/getFollowersForUser');
+const { getFollowersForUser } = require('./medium/get-followers-for-user');
 const { dbPromise } = require('./db/connect');
 const uuid = require('uuid/v4');
 

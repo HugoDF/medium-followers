@@ -22,9 +22,6 @@ app.use(sessions({
 const baseData = (req) => ({
   isAuthed: Boolean(req.auth && req.auth.id),
   auth: req.auth,
-  MEDIUM_CLIENT_ID: process.env.MEDIUM_CLIENT_ID,
-  MEDIUM_SECRET: process.env.MEDIUM_SECRET,
-  MEDIUM_REDIRECT_URI: process.env.MEDIUM_REDIRECT_URI
 });
 
 app.get('/', (req, res) => {
@@ -33,6 +30,7 @@ app.get('/', (req, res) => {
 
 const addHours = require('date-fns/add_hours');
 const addDays = require('date-fns/add_days');
+const format = require('date-fns/format');
 
 app.get('/dashboard', async (req, res) => {
   if(!req.auth || !req.auth.id) {
@@ -57,8 +55,27 @@ app.get('/dashboard', async (req, res) => {
     'SELECT number FROM FollowerCount WHERE userId = ? AND createdAt < ? ORDER BY createdAt DESC',
     req.auth.id, addDays(now, -1).getTime()
   ) || {};
-  const hourlyIncrease = hourlyFollowers !== '-' && `${currentFollowers - hourlyFollowers}`;
-  const dailyIncrease = dailyFollowers !== '-' && `${currentFollowers - dailyFollowers}`;
+  const {
+    number: weeklyFollowers = '-'
+  } = await db.get(
+    'SELECT number FROM FollowerCount WHERE userId = ? AND createdAt < ? ORDER BY createdAt DESC',
+    req.auth.id, addDays(now, -7).getTime()
+  ) || {};
+  
+  const data = await db.all(
+    'SELECT number, createdAt FROM FollowerCount WHERE userId = ? AND createdAt > ? ORDER BY createdAt ASC',
+    req.auth.id, addDays(now, -7).getTime()
+  );
+  const formatDifference = (num) =>
+    (num === 0
+      ? '0'
+      : num > 0
+      ? `+${num}`
+      : `-${num}`);
+        
+  const weeklyIncrease = weeklyFollowers !== '-' ? formatDifference(currentFollowers - weeklyFollowers) : '';
+  const hourlyIncrease = hourlyFollowers !== '-' ? formatDifference(currentFollowers - hourlyFollowers) : '';
+  const dailyIncrease = dailyFollowers !== '-' ? formatDifference(currentFollowers - dailyFollowers) : '';
   res.render('dashboard', {
     ...baseData(req),
     data: {
@@ -66,14 +83,21 @@ app.get('/dashboard', async (req, res) => {
       hourlyFollowers,
       hourlyIncrease,
       dailyFollowers,
-      dailyIncrease
-    }
+      dailyIncrease,
+      weeklyFollowers,
+      weeklyIncrease
+    },
+    initialData: JSON.stringify({
+      data: data.map((el) => ({
+        ...el,
+        createdAt: format(el.createdAt)
+      })),
+      startDate: addDays(now, -7)
+    })
   });
 });
 
-const makeQueryString = (obj) =>
-  Object.entries(obj).map(([ k, v]) => `${k}=${v}`)
-    .join('&');
+const makeQueryString = require('./lib/make-query-string');
   
 const MEDIUM_BASE_URL = 'https://api.medium.com/v1';
 
@@ -104,6 +128,18 @@ app.get('/medium-oauth/callback', async (req, res) => {
         `,
         id, username, url, imageUrl, access_token
       );
+    } else {
+      await db.run(
+        `UPDATE Users
+          SET 
+            username = ?,
+            url = ?,
+            imageUrl = ?,
+            accessToken = ?
+          WHERE id = ?
+        `,
+        username, url, imageUrl, access_token, id
+      );
     }
     req.auth = {
       id, username, name, url, imageUrl
@@ -113,9 +149,16 @@ app.get('/medium-oauth/callback', async (req, res) => {
 });
 
 app.get('/login/medium', (req, res) => {
-  const oauthBaseUrl = 'https://medium.com/m/oauth/authorize?';
-  res.redirect('/');
-  // client_id={{MEDIUM_CLIENT_ID}}&scope=basicProfile&state={{MEDIUM_SECRET}}&response_type=code&redirect_uri={{MEDIUM_REDIRECT_URI}}
+  const OAUTH_BASE_URL = 'https://medium.com/m/oauth/authorize?';
+  const oAuthQueryString = makeQueryString({
+    client_id: process.env.MEDIUM_CLIENT_ID,
+    scope: 'basicProfile',
+    state: process.env.MEDIUM_SECRET,
+    response_type: 'code',
+    redirect_uri: process.env.MEDIUM_REDIRECT_URI
+  });
+  const mediumLoginUrl = OAUTH_BASE_URL + oAuthQueryString;
+  res.redirect(mediumLoginUrl);
 });
 
 app.get('/logout', (req, res) => {
