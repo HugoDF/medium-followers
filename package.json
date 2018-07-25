@@ -3,26 +3,24 @@
   "version": "1.0.0",
   "repository": "https://github.com/HugoDF/medium-followers",
   "description": "",
-  "main": "collectFollowers.js",
+  "main": "app.js",
   "dependencies": {
-    "axios": "^0.15.3",
-    "redis": "^2.6.5"
+    "airtable": "^0.5.6",
+    "axios": "^0.17.1",
+    "client-sessions": "^0.8.0",
+    "date-fns": "^1.29.0",
+    "express": "^4.16.2",
+    "express-handlebars": "^3.0.0",
+    "sqlite": "^2.9.1",
+    "uuid": "^3.2.1"
   },
-  "devDependencies": {
-    "blessed": "^0.1.81",
-    "blessed-contrib": "git://github.com/thomasdondorf/blessed-contrib#c973213a79bffd07d0ed9175030d09539b8c1d3f",
-    "chai": "^3.5.0",
-    "mocha": "^3.2.0",
-    "mocha-better-spec-reporter": "^3.1.0",
-    "moment": "^2.17.1"
-  },
-  "config": {
-    "ut": "{,!(node_modules)/**/}*.test.js"
+  "engines": {
+    "node": "9.x"
   },
   "scripts": {
-    "start": "node ./collectFollowers",
-    "graph": "node ./cli",
-    "test": "NODE_PATH=. mocha --reporter mocha-better-spec-reporter ${npm_package_config_ut}"
+    "start": "node server.js",
+    "collect": "node ./collectFollowers",
+    "migrate": "node ./db/migrate"
   },
   "author": "Hugo Di Francesco",
   "license": "MIT"
