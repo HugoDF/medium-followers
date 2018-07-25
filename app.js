@@ -12,6 +12,8 @@ const { dbPromise } = require('./db/connect');
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
+// app.use('/static', express.static('.data'));
+
 app.use(sessions({
   cookieName: 'auth', // cookie name dictates the key name added to the request object
   secret: process.env.SESSION_SECRET,

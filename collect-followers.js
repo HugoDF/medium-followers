@@ -11,7 +11,7 @@ async function main() {
      .map((user) =>
           getFollowersForUser(user.username)
           .then(async (count) => {
-            const { number: currentFollowerCount } = await db.get('SELECT number FROM FollowerCount ORDER BY createdAt DESC');
+            const { number: currentFollowerCount } = await db.get('SELECT number FROM FollowerCount WHERE userId = ? ORDER BY createdAt DESC ', user.id)
             if (currentFollowerCount !== count) {
               await db.run(
                 `INSERT INTO FollowerCount (id, userId, number, createdAt)
@@ -20,6 +20,8 @@ async function main() {
                 uuid(), user.id, count, Date.now()
               );
               console.log('Added new FollowerCount to DB');
+            } else {
+              console.log('Not adding followerCount');
             }
           })
           .catch( err => console.error(err) )
