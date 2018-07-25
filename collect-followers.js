@@ -14,7 +14,7 @@ async function main() {
         FollowerCount.getCurrentFollowerCountForUserId(user.id)
       ]).then(async ([count, currentFollowerCount]) => {
         console.log(count, currentFollowerCount);
-        if (currentFollowerCount === count) {
+        if (currentFollowerCount !== count) {
           await FollowerCount.create(uuid(), user.id, count, Date.now());
           console.log('Added new FollowerCount to DB');
         } else {
