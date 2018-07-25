@@ -1,7 +1,11 @@
-<h1>
-  Landing
-</h1>
+<section class="section">
+  <h1>
+    Welcome to Medium followers,
+  </h1>
 
-{{#if isAuthed}}
-  For your statistics: <a href="/dashboard">Go to dashboard</a>
-{{/if}}
+  {{#if isAuthed}}
+    For your statistics: <a href="/dashboard">Go to dashboard</a>
+  {{else}}
+    To start: <a href="/login/medium">Log in with Medium</a>
+  {{/if}}
+</section>

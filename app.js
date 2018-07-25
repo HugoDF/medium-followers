@@ -30,7 +30,39 @@ app.get('/', (req, res) => {
 
 const addHours = require('date-fns/add_hours');
 const addDays = require('date-fns/add_days');
+const addMonths = require('date-fns/add_months');
+const getYear = require('date-fns/get_year');
 const format = require('date-fns/format');
+
+async function getFollowerChartDataForTimePeriod({ db, id }) {
+  const now = Date.now();
+  const rawData = await db.all(
+    'SELECT number, createdAt FROM FollowerCount WHERE userId = ? AND createdAt > ? ORDER BY createdAt ASC',
+    id, addMonths(now, -1).getTime()
+  );
+  const data = rawData.filter(el => el.number !== null);
+  
+  const timeSlices = Array.from({ length: 30 }, (_, i) => {
+    const dateTime = addDays(now, -i - .5);
+    const formattedDate = format(dateTime, 'DD/MM');
+    const { number: followerCount } = data.find(el => el.createdAt > dateTime) || {};
+    return {
+      rawDate: dateTime,
+      formattedDate,
+      followerCount
+    };
+  }).filter(({ followerCount }) => Boolean(followerCount))
+  .sort((a, b) => a.rawDate > b.rawDate ? 1 : -1);
+  
+  const maxFollowerCount = timeSlices.reduce((max, { followerCount }) => max > followerCount ? max : followerCount, 0);
+  const minFollowerCount = timeSlices.reduce((min, { followerCount }) => min < followerCount ? min : followerCount, Infinity);
+  console.log(maxFollowerCount, minFollowerCount);
+  return {
+    timeSlices,
+    maxFollowerCount,
+    minFollowerCount
+  };
+}
 
 app.get('/dashboard', async (req, res) => {
   if(!req.auth || !req.auth.id) {
@@ -61,11 +93,24 @@ app.get('/dashboard', async (req, res) => {
     'SELECT number FROM FollowerCount WHERE userId = ? AND createdAt < ? ORDER BY createdAt DESC',
     req.auth.id, addDays(now, -7).getTime()
   ) || {};
+  const {
+    number: monthlyFollowers = '-'
+  } = await db.get(
+    'SELECT number FROM FollowerCount WHERE userId = ? AND createdAt < ? ORDER BY createdAt DESC',
+    req.auth.id, addMonths(now, -1).getTime()
+  ) || {};
+  const {
+    number: followersFromYearStart = '-'
+  } = await db.get(
+    'SELECT number FROM FollowerCount WHERE userId = ? AND createdAt < ? ORDER BY createdAt DESC',
+    req.auth.id, getYear(now)
+  ) || {};
   
-  const data = await db.all(
+  const rawData = await db.all(
     'SELECT number, createdAt FROM FollowerCount WHERE userId = ? AND createdAt > ? ORDER BY createdAt ASC',
-    req.auth.id, addDays(now, -7).getTime()
+    req.auth.id, addMonths(now, -1).getTime()
   );
+  const data = rawData.filter(el => el.number !== null);
   const formatDifference = (num) =>
     (num === 0
       ? '0'
@@ -73,6 +118,8 @@ app.get('/dashboard', async (req, res) => {
       ? `+${num}`
       : `-${num}`);
         
+  const increaseFromStartOfYear = followersFromYearStart !== '-' ? formatDifference(currentFollowers - followersFromYearStart) : '';
+  const monthlyIncrease = monthlyFollowers !== '-' ? formatDifference(currentFollowers - monthlyFollowers) : '';
   const weeklyIncrease = weeklyFollowers !== '-' ? formatDifference(currentFollowers - weeklyFollowers) : '';
   const hourlyIncrease = hourlyFollowers !== '-' ? formatDifference(currentFollowers - hourlyFollowers) : '';
   const dailyIncrease = dailyFollowers !== '-' ? formatDifference(currentFollowers - dailyFollowers) : '';
@@ -85,14 +132,19 @@ app.get('/dashboard', async (req, res) => {
       dailyFollowers,
       dailyIncrease,
       weeklyFollowers,
-      weeklyIncrease
+      weeklyIncrease,
+      monthlyFollowers,
+      monthlyIncrease,
+      followersFromYearStart,
+      increaseFromStartOfYear
     },
     initialData: JSON.stringify({
       data: data.map((el) => ({
         ...el,
         createdAt: format(el.createdAt)
       })),
-      startDate: addDays(now, -7)
+      startDate: addDays(now, -7),
+      ...(await getFollowerChartDataForTimePeriod({ db, id: req.auth.id }))
     })
   });
 });
