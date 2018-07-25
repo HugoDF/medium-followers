@@ -3,3 +3,5 @@ node_modules
 bundle.js
 dump.rdb
 npm-debug*
+.data
+.env
