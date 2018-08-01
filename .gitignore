@@ -5,3 +5,4 @@ dump.rdb
 npm-debug*
 .data
 .env
+package-lock.json
