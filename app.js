@@ -42,6 +42,7 @@ app.get('/dashboard', async (req, res) => {
 
 const { getFollowing } = require('./following');
 const { getFollowersForUser } = require('./medium/get-followers-for-user');
+const uuidv4 = require('uuid/v4');
 
 app.post('/api/following-follower-count', async (req, res) => {
   const { username } = req.body;
@@ -53,6 +54,18 @@ app.post('/api/following-follower-count', async (req, res) => {
     user: user,
     followers: await getFollowersForUser(user)
   })));
+  const createIfNew = async name => {
+    const exists = await user.getByUsername(name);
+    if (!exists) {
+      user.create(uuidv4(), name)
+    }
+  }
+  const createUsers = Promise.all([
+    // proper usernames don't have @
+    createIfNew(username.replace('@', '')),
+    following.map(name => createIfNew(name))
+  ]);
+  createUsers.then(() => console.log('created some users'));
   return res.json({
     userFollowerCount,
     following: followingWithFollowerCount
@@ -82,7 +95,7 @@ app.get('/medium-oauth/callback', async (req, res) => {
       { headers: { Authorization: `Bearer ${access_token}` } }
     )).data;
     const { id, username, name, url, imageUrl } = userResp.data;
-    const activeUser = await user.getById(id);
+    const activeUser = await user.getByUsername(id);
     if (!activeUser) {
       await user.create(id, username, url, imageUrl, access_token);
     } else {

@@ -47,6 +47,18 @@ function createUser(id, username, url, imageUrl, accessToken) {
   });
 }
 
+async function getUserByUsername(username) {
+  try {
+    const [user] = await usersBase.select({
+      filterByFormula: `username = '${username}'`,
+      maxRecords: 1
+    }).firstPage();
+    return user;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 async function getUserById(userId) {
   try {
     const [user] = await usersBase.select({
@@ -92,6 +104,7 @@ module.exports = {
     all: getAllUsers,
     create: createUser,
     getById: getUserById,
+    getByUsername: getUserByUsername,
     update: updateUser
   },
   getCurrentFollowerCountForUserId,
