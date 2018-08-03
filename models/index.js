@@ -21,6 +21,30 @@ async function getCurrentFollowerCountForUserId(userId) {
   }
 }
 
+function createUser(id, username, url, imageUrl, accessToken) {
+  return usersBase.create({
+    id, username, url, imageUrl, accessToken
+  });
+}
+
+async function getUserById (userId) {
+  try {
+    const [user] = await usersBase.select({
+      filterByFormula: `id = '${userId}'`,
+      maxRecords: 1
+    }).firstPage();
+    return user;
+  } catch(err) {
+    console.error(err);
+  }
+}
+
+function updateUser(airtableUserId, username, url, imageUrl, accessToken) {
+  return usersBase.update(airtableUserId, {
+    username, url, imageUrl, accessToken
+  });
+}
+
 async function getAirtableIdForUserId(userId) {
   try {
     const [user] = await usersBase.select({
@@ -53,6 +77,11 @@ function create(id, userId, number, createdAt) {
 }
 
 module.exports = {
+  user: {
+    create: createUser,
+    getById: getUserById,
+    update: updateUser
+  },
   getCurrentFollowerCountForUserId,
   create
 }
