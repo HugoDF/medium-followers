@@ -1,5 +1,5 @@
 const axios = require('axios');
-const makeQueryString = require('./lib/make-query-string');
+const makeQueryString = require('../lib/make-query-string');
 
 const remove = '])}while(1);</x>';
 

@@ -42,7 +42,7 @@ app.get('/dashboard', async (req, res) => {
   });
 });
 
-const { getFollowing } = require('./following');
+const { getFollowing } = require('./medium/get-following');
 const { getFollowersForUser } = require('./medium/get-followers-for-user');
 
 const uuidv4 = require('uuid/v4');
