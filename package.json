@@ -7,11 +7,11 @@
   "dependencies": {
     "airtable": "^0.5.6",
     "axios": "^0.17.1",
+    "body-parser": "^1.18.3",
     "client-sessions": "^0.8.0",
     "date-fns": "^1.29.0",
     "express": "^4.16.2",
     "express-handlebars": "^3.0.0",
-    "sqlite": "^2.9.1",
     "uuid": "^3.2.1"
   },
   "engines": {
@@ -19,8 +19,7 @@
   },
   "scripts": {
     "start": "node server.js",
-    "collect": "node ./collectFollowers",
-    "migrate": "node ./db/migrate"
+    "collect": "node ./collectFollowers"
   },
   "author": "Hugo Di Francesco",
   "license": "MIT"

@@ -6,13 +6,13 @@ const axios = require('axios');
 const app = express();
 
 const sessions = require('client-sessions');
-
-const { dbPromise } = require('./db/connect');
+const bodyParser = require('body-parser');
 
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
 // app.use('/static', express.static('.data'));
+app.use(bodyParser.json());
 
 app.use(sessions({
   cookieName: 'auth', // cookie name dictates the key name added to the request object
@@ -30,44 +30,6 @@ app.get('/', (req, res) => {
   res.render('landing', baseData(req));
 });
 
-const addHours = require('date-fns/add_hours');
-const addDays = require('date-fns/add_days');
-const addMonths = require('date-fns/add_months');
-const getYear = require('date-fns/get_year');
-const format = require('date-fns/format');
-
-const { user, getCurrentFollowerCountForUserId } = require('./models');
-
-async function getFollowerChartDataForTimePeriod({ db, id }) {
-  const now = Date.now();
-  const rawData = await db.all(
-    'SELECT number, createdAt FROM FollowerCount WHERE userId = ? AND createdAt > ? ORDER BY createdAt ASC',
-    id, addMonths(now, -1).getTime()
-  );
-  const data = rawData.filter(el => el.number !== null);
-
-  const timeSlices = Array.from({ length: 30 }, (_, i) => {
-    const dateTime = addDays(now, -i - .5);
-    const formattedDate = format(dateTime, 'DD/MM');
-    const { number: followerCount } = data.find(el => el.createdAt > dateTime) || {};
-    return {
-      rawDate: dateTime,
-      formattedDate,
-      followerCount
-    };
-  }).filter(({ followerCount }) => Boolean(followerCount))
-  .sort((a, b) => a.rawDate > b.rawDate ? 1 : -1);
-
-  const maxFollowerCount = timeSlices.reduce((max, { followerCount }) => max > followerCount ? max : followerCount, 0);
-  const minFollowerCount = timeSlices.reduce((min, { followerCount }) => min < followerCount ? min : followerCount, Infinity);
-  console.log(maxFollowerCount, minFollowerCount);
-  return {
-    timeSlices,
-    maxFollowerCount,
-    minFollowerCount
-  };
-}
-
 app.get('/dashboard', async (req, res) => {
   if(!req.auth || !req.auth.id) {
     res.redirect('/');
@@ -75,31 +37,10 @@ app.get('/dashboard', async (req, res) => {
   const currentFollowers = await(getCurrentFollowerCountForUserId);
   res.render('dashboard', {
     currentFollowers
-
-    // ...baseData(req),
-    // data: {
-    //   currentFollowers,
-    //   hourlyFollowers,
-    //   hourlyIncrease,
-    //   dailyFollowers,
-    //   dailyIncrease,
-    //   weeklyFollowers,
-    //   weeklyIncrease,
-    //   monthlyFollowers,
-    //   monthlyIncrease,
-    //   followersFromYearStart,
-    //   increaseFromStartOfYear
-    // },
-    // initialData: JSON.stringify({
-    //   data: data.map((el) => ({
-    //     ...el,
-    //     createdAt: format(el.createdAt)
-    //   })),
-    //   startDate: addDays(now, -7),
-    //   ...(await getFollowerChartDataForTimePeriod({ db, id: req.auth.id }))
-    // })
   });
 });
+
+app.post('/followers')
 
 const makeQueryString = require('./lib/make-query-string');
 

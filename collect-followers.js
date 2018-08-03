@@ -1,11 +1,10 @@
 const { getFollowersForUser } = require('./medium/get-followers-for-user');
-const { dbPromise } = require('./db/connect');
 const uuid = require('uuid/v4');
 const FollowerCount = require('./models');
+const { user } = require('./models');
 
 async function main() {
-  const db = await dbPromise;
-  const users = await db.all('SELECT username, id FROM Users');
+  const users = await user.all();
   console.log(`Running follower count collection for ${users.length} users`);
   return Promise.all(
     users
