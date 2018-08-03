@@ -17,18 +17,6 @@
 
   <script>
     (function (document) {
-      function post(url, data, options) {
-        return fetch(url, {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          credentials: 'include',
-          body: JSON.stringify(data),
-          ...options
-        })
-      }
       const submitForm = document.querySelector('.submit-widget');
       const widgetDisplay = document.querySelector('.widget-display');
 

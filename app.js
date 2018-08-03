@@ -1,5 +1,5 @@
 const express = require('express');
-const exphbs  = require('express-handlebars');
+const exphbs = require('express-handlebars');
 
 const { user, getCurrentFollowerCountForUserId } = require('./models');
 const axios = require('axios');
@@ -7,12 +7,14 @@ const app = express();
 
 const sessions = require('client-sessions');
 const bodyParser = require('body-parser');
+const morgan = require('morgan');
 
-app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
 
 // app.use('/static', express.static('.data'));
 app.use(bodyParser.json());
+app.use(morgan('dev'));
 
 app.use(sessions({
   cookieName: 'auth', // cookie name dictates the key name added to the request object
@@ -31,7 +33,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/dashboard', async (req, res) => {
-  if(!req.auth || !req.auth.id) {
+  if (!req.auth || !req.auth.id) {
     res.redirect('/');
   }
   const currentFollowers = await getCurrentFollowerCountForUserId(req.auth.id);
@@ -42,7 +44,38 @@ app.get('/dashboard', async (req, res) => {
 
 const { getFollowing } = require('./following');
 const { getFollowersForUser } = require('./medium/get-followers-for-user');
+
 const uuidv4 = require('uuid/v4');
+
+const createIfNew = async name => {
+  const exists = await user.getByUsername(name);
+  if (!exists) {
+    user.create(uuidv4(), name)
+  }
+}
+
+app.get('/api/current-following-follower-count', async (req, res) => {
+  if (!req.auth || !req.auth.id) {
+    return res.sendStatus(401);
+  }
+  const fullUser = await user.getById(req.auth.id);
+  const username = fullUser.get('username');
+  const following = await getFollowing(`@${username}`, 1);
+  const followingWithFollowerCount = await Promise.all(following.map(async user => ({
+    user: user,
+    followers: await getFollowersForUser(user)
+  })))
+
+  Promise.all(
+    following.map(
+      name => createIfNew(name)
+    )
+  ).then(() => console.log('created some more users'));
+
+  return res.json({
+    following: followingWithFollowerCount
+  });
+});
 
 app.post('/api/following-follower-count', async (req, res) => {
   const { username } = req.body;
@@ -54,12 +87,6 @@ app.post('/api/following-follower-count', async (req, res) => {
     user: user,
     followers: await getFollowersForUser(user)
   })));
-  const createIfNew = async name => {
-    const exists = await user.getByUsername(name);
-    if (!exists) {
-      user.create(uuidv4(), name)
-    }
-  }
   const createUsers = Promise.all([
     // proper usernames don't have @
     createIfNew(username.replace('@', '')),
@@ -77,7 +104,7 @@ const makeQueryString = require('./lib/make-query-string');
 const MEDIUM_BASE_URL = 'https://api.medium.com/v1';
 
 app.get('/medium-oauth/callback', async (req, res) => {
-  const { state, code, error} = req.query;
+  const { state, code, error } = req.query;
 
   if (!error && state === process.env.MEDIUM_SECRET) {
     const postContent = {

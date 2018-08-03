@@ -3,77 +3,43 @@
 </h1>
 
 <h2>Current number of followers: {{ currentFollowers }}</h2>
-{{!-- <ul>
-  <li></li>
-  <li>Number of followers an hour ago: {{ data.hourlyFollowers }} {{ data.hourlyIncrease }}</li>
-  <li>Number of followers a day ago: {{ data.dailyFollowers }} {{ data.dailyIncrease }}</li>
-  <li>Number of followers a week ago: {{ data.weeklyFollowers }} {{ data.weeklyIncrease }}</li>
-  <li>Number of followers a month ago: {{ data.monthlyFollowers }} {{ data.monthlyIncrease }}</li>
-  <li>Number of followers at the start of this year: {{ data.followersFromYearStart }} {{ data.increaseFromStartOfYear }}</li>
-</ul>
+
 <div id="app">
-  <div>
-    <label>Start Date</label>
-    <input type="date" @change="changeStartDate($event)">
-    <label>End Date</label>
-    <input type="date" @change="changeEndDate($event)">
-  </div>
-  <div>
-    \{{startDate}}
-  </div>
-  <div>
-    <line-chart
-      :data="chartData"
-      :min="chartMin"
-      :max="chartMax">
-    </line-chart>
-  </div>
+  Here are some people you follow and their number of followers:
+  <div v-if="isLoading">Loading...</div>
+  <ul v-else>
+    <li v-for="following in followingList" :key="following.user">
+      \{{following.user}}: \{{following.followers}}
+    </li>
+
+  </ul>
 </div>
 
-<script src="https://unpkg.com/vue@2.5.13/dist/vue.js"></script>
-<script src="https://unpkg.com/chart.js@2.7.2/dist/Chart.bundle.js"></script>
-<script src="https://unpkg.com/vue-chartkick@0.3.1"></script>
+<script src="https://unpkg.com/vue@2.5.13/dist/vue.min.js"></script>
 <script>
-  const INITIAL_DATA = {{{ initialData }}};
-  const CHART_RANGE = 2;
+
   const app = new Vue({
     el: '#app',
-    data: function() {
-      return Object.assign(
-        {},
-        INITIAL_DATA,
-        {}
-      );
+    data: function () {
+      return {
+        followingList: [],
+        isLoading: false
+      };
     },
-    computed: {
-      chartMax: function () {
-        return this.maxFollowerCount + CHART_RANGE / 2;
-      },
-      chartMin: function () {
-        return this.minFollowerCount - CHART_RANGE / 2;
-      },
-      chartData: function () {
-        return this.timeSlices.reduce(function (prev, slice) {
-          prev[slice.rawDate]= slice.followerCount;
-          return prev;
-        }, {});
-      },
-      xValues: function () {
-        const maxValue = Math.floor((this.maxFollowerCount + 10) / 10) * 10;
-        const minValue = Math.ceil((this.minFollowerCount - 10) / 10) * 10;
-        const amplitude = maxValue - minValue;
-        return [
-          amplitude
-        ];
-      }
-    },
-    methods: {
-      changeStartDate: function (e) {
-        console.log(e);
-      },
-      changeEndDate: function (e) {
-        console.log(e);
-      }
+    mounted() {
+      this.isLoading = true;
+      fetch('/api/current-following-follower-count', {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+      })
+        .then(data => data.json())
+        .then(({ following }) => {
+          this.followingList = following;
+          this.isLoading = false;
+        });
     }
   });
-</script> --}}
+</script>
