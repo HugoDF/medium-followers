@@ -1,7 +1,7 @@
 const express = require('express');
 const exphbs  = require('express-handlebars');
 
-
+const { user, getCurrentFollowerCountForUserId } = require('./models');
 const axios = require('axios');
 const app = express();
 
@@ -34,7 +34,7 @@ app.get('/dashboard', async (req, res) => {
   if(!req.auth || !req.auth.id) {
     res.redirect('/');
   }
-  const currentFollowers = await(getCurrentFollowerCountForUserId);
+  const currentFollowers = await getCurrentFollowerCountForUserId(req.auth.id);
   res.render('dashboard', {
     currentFollowers
   });
@@ -65,7 +65,7 @@ app.get('/medium-oauth/callback', async (req, res) => {
       { headers: { Authorization: `Bearer ${access_token}` } }
     )).data;
     const { id, username, name, url, imageUrl } = userResp.data;
-    const activeUser = await getUserById(id);
+    const activeUser = await user.getById(id);
     if (!activeUser) {
       await user.create(id, username, url, imageUrl, access_token);
     } else {
