@@ -17,11 +17,11 @@ async function getNextPageUserNames(url, pageLimit) {
     const paging = data.payload.paging;
     const { limit, to, page, source } = paging.next;
     console.log({limit, to, page, source});
-    if (page > pageLimit) {
+    if (page + 1 >= pageLimit) {
       return followingUserNames;
     }
     const nextPageUrl = paging.path + '?' + makeQueryString({ limit, to, page, source });
-    return [...followingUserNames, ...(await getNextPageUserNames(nextPageUrl))]
+    return [...followingUserNames, ...(await getNextPageUserNames(nextPageUrl, pageLimit))]
   } catch (err) {
     console.error(err.stack);
     return [];
@@ -32,3 +32,7 @@ async function getFollowing (username, pageLimit = PAGE_LIMIT) {
   const url = `https://medium.com/${username}/following`;
   return await getNextPageUserNames(url, pageLimit);
 }
+
+module.exports = {
+  getFollowing
+};

@@ -19,8 +19,12 @@
   },
   "scripts": {
     "start": "node server.js",
+    "dev": "nodemon server.js",
     "collect": "node ./collectFollowers"
   },
   "author": "Hugo Di Francesco",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^1.18.3"
+  }
 }

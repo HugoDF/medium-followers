@@ -40,7 +40,24 @@ app.get('/dashboard', async (req, res) => {
   });
 });
 
-app.post('/followers')
+const { getFollowing } = require('./following');
+const { getFollowersForUser } = require('./medium/get-followers-for-user');
+
+app.post('/api/following-follower-count', async (req, res) => {
+  const { username } = req.body;
+  const [userFollowerCount, following] = await Promise.all([
+    getFollowersForUser(username),
+    getFollowing(username, 2)
+  ]);
+  const followingWithFollowerCount = await Promise.all(following.map(async user => ({
+    user: user,
+    followers: await getFollowersForUser(user)
+  })));
+  return res.json({
+    userFollowerCount,
+    following: followingWithFollowerCount
+  });
+});
 
 const makeQueryString = require('./lib/make-query-string');
 
