@@ -9,8 +9,14 @@ const sessions = require('client-sessions');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 
-app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
+app.engine('handlebars', exphbs({
+  defaultLayout: 'main',
+  partialsDir: __dirname + '/views/partials'
+}));
+
 app.set('view engine', 'handlebars');
+
+app.use('/public', express.static('./static'));
 
 // app.use('/static', express.static('.data'));
 app.use(bodyParser.json());

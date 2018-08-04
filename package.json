@@ -21,12 +21,13 @@
   },
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js",
+    "dev": "NODE_ENV=development nodemon server.js",
     "collect": "node ./collectFollowers"
   },
   "author": "Hugo Di Francesco",
   "license": "MIT",
   "devDependencies": {
+    "browser-sync": "^2.24.6",
     "localtunnel": "^1.9.0",
     "nodemon": "^1.18.3"
   },

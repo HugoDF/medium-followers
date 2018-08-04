@@ -1,0 +1,161 @@
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  }
+  a {
+    color: #333;
+    text-decoration: none;
+  }
+
+  .c-nav {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+  }
+    .c-nav__inner {
+      max-width: 1024px;
+      align-items: center;
+      display: flex;
+      padding: 10px;
+    }
+    .c-nav__logo {
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+      margin-right: 10px;
+    }
+
+    .c-nav__link {
+      text-decoration: none;
+    }
+
+    .c-nav__right {
+      display: flex;
+      margin-left: auto;
+    }
+
+  .c-content {
+    padding-top: 60px;
+  }
+
+  .c-title-s {
+    font-weight: 500;
+    color: #1e1e1e;
+    font-size: 20px;
+    line-height: 26px;
+  }
+
+  .c-title-m {
+    font-weight: 500;
+    color: #1e1e1e;
+    font-size: 26px;
+    line-height: 35px;
+  }
+
+  .c-btn {
+    border-radius: 5px;
+    padding: 10px 20px;
+    border: none;
+    font-size: 20px;
+    line-height: 26px;
+    cursor: pointer;
+  }
+  .c-btn--primary {
+    background-color: #0074D9;
+    color: #fff;
+  }
+  .c-btn--primary:hover {
+    background-color: rgb(14, 68, 114);
+  }
+  .c-btn--white {
+    background-color: #fff;
+  }
+  .c-btn--white:hover {
+    background-color: #eee;
+  }
+
+  .c-hero-pattern {
+    background-color: #333;
+    background-position: center;
+    background-image: url("/public/landing-hero.jpg");
+  }
+  .c-hero-pattern::before {
+    content: '';
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+    background-color: rgba(0, 0, 0, .5);
+    z-index: 0;
+  }
+  .c-hero-pattern > * {
+    z-index: 1;
+  }
+
+  .c-landing__hero {
+    position: relative;
+    min-height: 50vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 100px;
+    padding-bottom: 100px;
+  }
+    .c-landing__hero__logo {
+      height: 60px;
+      width: 60px;
+      display: flex;
+      margin-bottom: 20px;
+    }
+    .c-landing__hero__heading {
+      font-weight: 600;
+      color: #fff;
+      font-size: 45px;
+      line-height: 65px;
+      margin-bottom: 30px;
+    }
+    .c-landing__hero__tagline {
+      font-style: italic;
+      font-weight: normal;
+      color: #fff;
+      text-align: center;
+      font-size: 26px;
+      line-height: 40px;
+      max-width: 400px;
+      margin-bottom: 50px;
+    }
+
+  .c-landing__demo {
+    padding-top: 50px;
+    padding-bottom: 50px;
+  }
+    .c-landing__demo__heading {
+      text-align: center;
+    }
+    .c-landing__demo__widget {
+      height: 500px;
+      background-color: gold;
+    }
+
+  .c-landing__make-it-work {
+    text-align: center;
+    padding-bottom: 50px;
+  }
+    .c-landing__make-it-work__form {
+      display: flex;
+      justify-items: center;
+      justify-content: center;
+      padding: 30px;
+    }
+    .c-landing__make-it-work__form__input {
+      display: flex;
+      font-size: 18px;
+    }
+    .c-landing__make-it-work__form__input--text {
+      padding: 10px 15px;
+    }
+</style>
