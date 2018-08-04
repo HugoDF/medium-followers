@@ -28,5 +28,21 @@
   "license": "MIT",
   "devDependencies": {
     "nodemon": "^1.18.3"
+  },
+  "now": {
+    "alias": [
+      "medium-followers",
+      "mediumlytics.xyz"
+    ],
+    "env": {
+      "AIRTABLE_API_KEY": "@mediumlytics_api_key",
+      "AIRTABLE_BASE": "@mediumlytics_base",
+      "SESSION_SECRET": "@mediumlytics-secret",
+      "REFRESH_RATE": "60000",
+      "MEDIUM_CLIENT_ID": "@mediumlytics-medium-client-id",
+      "MEDIUM_CLIENT_SECRET": "@mediumlytics-medium-client-secret",
+      "MEDIUM_SECRET": "@mediumlytics-medium-secret",
+      "MEDIUM_REDIRECT_URI": "https://mediumlytics.xyz/medium-oauth/callback"
+    }
   }
 }
