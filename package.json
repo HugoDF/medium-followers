@@ -27,6 +27,7 @@
   "author": "Hugo Di Francesco",
   "license": "MIT",
   "devDependencies": {
+    "localtunnel": "^1.9.0",
     "nodemon": "^1.18.3"
   },
   "now": {
