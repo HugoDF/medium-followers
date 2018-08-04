@@ -1,4 +1,5 @@
 const app = require('./app');
+
 const followerCollector = require('./collect-followers');
 // listen for requests :)
 const listener = app.listen(process.env.PORT, function () {
