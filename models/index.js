@@ -1,8 +1,8 @@
-const { base, MEDIUMLYTICS_FOLLOWER_COUNT, MEDIUMLYTICS_USERS } = require('./base');
+const { base, MEDIUMLYTICS_FOLLOWER_COUNT, MEDIUMLYTICS_USERS, MEDIUMLYTICS_POSTS } = require('./base');
 
 const followerCountBase = base(MEDIUMLYTICS_FOLLOWER_COUNT);
 const usersBase = base(MEDIUMLYTICS_USERS);
-
+const postsBase = base(MEDIUMLYTICS_POSTS);
 
 function fetchAllRecords(baseSelectQuery) {
   let allRecords = [];
@@ -15,6 +15,35 @@ function fetchAllRecords(baseSelectQuery) {
       allRecords = allRecords.concat(pageRecords);
       fetchNextPage();
     }, err => (err ? reject(err) : resolve(allRecords)))
+  );
+}
+
+async function getPostByUrl(url) {
+  try {
+    const [post] = await postsBase.select({
+      filterByFormula: `url = '${url}'`,
+      maxRecords: 1
+    }).firstPage();
+    return post;
+  } catch (err) {
+    console.error(err);
+  }
+}
+async function createPost(url, userId, publishDate, title) {
+  const airtableUserId = await getAirtableIdForUserId(userId);
+  return postsBase.create({
+    url,
+    userId: [airtableUserId],
+    publishDate,
+    title
+  });
+}
+
+async function getAllPosts() {
+  return (await fetchAllRecords(
+    postsBase.select({})
+  )).map(
+    (post) => ({ url: post.get('url') })
   );
 }
 
@@ -92,14 +121,19 @@ async function getAirtableIdForUserId(userId) {
 
 function create(id, userId, number, createdAt) {
   return getAirtableIdForUserId(userId)
-  .then(airtableUserId =>
-    followerCountBase.create({
-      id, userId: [airtableUserId], number, createdAt
-    })
-  );
+    .then(airtableUserId =>
+      followerCountBase.create({
+        id, userId: [airtableUserId], number, createdAt
+      })
+    );
 }
 
 module.exports = {
+  Post: {
+    getByUrl: getPostByUrl,
+    create: createPost,
+    all: getAllPosts
+  },
   user: {
     all: getAllUsers,
     create: createUser,
