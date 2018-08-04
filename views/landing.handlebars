@@ -27,7 +27,7 @@
           .then(data => data.json())
           .then(({ following, userFollowerCount }) => {
             const userFollowers = `<h2>${username} has ${userFollowerCount} followers</h2>`;
-            const followerList = `<br/>Here are some of the people you follow's follower's count: <ul>${following.map(({ user, followers }) => `<li>${user}: ${followers}<li>`).join('')}</ul>`;
+            const followerList = `<br/>Here are the stats of some of the people they follow: <ul>${following.map(({ user, followers }) => `<li>${user}: ${followers}<li>`).join('')}</ul>`;
             widgetDisplay.innerHTML = userFollowers + followerList;
           });
       }
