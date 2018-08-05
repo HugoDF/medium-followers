@@ -141,37 +141,75 @@
     }
     .c-landing__demo__widget {
       height: 500px;
-      background-color: gold;
+      border: solid 1px rgb(75,0,130);
+      display: flex;
+      align-content: center;
+      align-items: center;
+      justify-content: center;
     }
 
-  .c-landing__make-it-work {
+    #demo-app {
+      justify-content: center;
+      display: flex;
+      flex: 1;
+    }
+
+  .c-landing__cta-section {
     text-align: center;
     padding-bottom: 50px;
   }
-    .c-landing__make-it-work__form {
+    .c-landing__cta-section__form {
       display: flex;
       justify-items: center;
       justify-content: center;
       padding: 30px;
     }
-    .c-landing__make-it-work__form__input {
+    .c-landing__cta-section__form__input {
       display: flex;
       font-size: 18px;
     }
-    .c-landing__make-it-work__form__input--text {
+    .c-landing__cta-section__form__input--text {
       padding: 10px 15px;
     }
   .c-landing__what-it-does {
-    text-align: center;
+    padding-top: 50px;
+    padding-bottom: 50px;
   }
+    .c-landing__what-it-does__heading {
+      text-align: center;
+      margin-bottom: 50px;
+    }
     .c-landing__what-it-does__card-container {
       display: flex;
       max-width: 1024px;
       margin: auto;
+      flex-wrap: wrap;
     }
     .c-landing__what-it-does__card {
       display: flex;
       flex: 1;
+      padding: 20px;
       flex-direction: column;
     }
+    @media screen and (max-width: 640px) {
+     .c-landing__what-it-does__card {
+       flex: 0 0 calc(100% - 40px);
+     }
+    }
+      .c-landing__what-it-does__card__icon {
+        width: 55px;
+        height: 55px;
+        display: flex;
+        margin-right: 20px;
+      }
+      .c-landing__what-it-does__card__icon--analysis {
+        width: 75px;
+        height: 75px;
+      }
+      .c-landing__what-it-does__card__heading {
+        display: flex;
+        align-items: center;
+        height: 50px;
+        margin-bottom: 20px;
+      }
 </style>
