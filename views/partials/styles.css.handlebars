@@ -11,11 +11,14 @@
 
   .c-nav {
     position: fixed;
+    background-color: #fff;
+    z-index: 99;
     left: 0;
     top: 0;
     right: 0;
   }
     .c-nav__inner {
+      margin: auto;
       max-width: 1024px;
       align-items: center;
       display: flex;
@@ -64,11 +67,11 @@
     cursor: pointer;
   }
   .c-btn--primary {
-    background-color: #0074D9;
+    background-color: rgb(75,0,130);
     color: #fff;
   }
   .c-btn--primary:hover {
-    background-color: rgb(14, 68, 114);
+    background-color: rgb(95, 20, 150);
   }
   .c-btn--white {
     background-color: #fff;
@@ -157,5 +160,18 @@
     }
     .c-landing__make-it-work__form__input--text {
       padding: 10px 15px;
+    }
+  .c-landing__what-it-does {
+    text-align: center;
+  }
+    .c-landing__what-it-does__card-container {
+      display: flex;
+      max-width: 1024px;
+      margin: auto;
+    }
+    .c-landing__what-it-does__card {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
     }
 </style>

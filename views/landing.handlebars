@@ -7,7 +7,7 @@
     statistics designed to help you grow
   </blockquote>
 
-  <a class="c-btn c-btn--white" href="/#make-it-work-for-you">Try now</a>
+  <a class="c-btn c-btn--primary" href="/#make-it-work-for-you">Try now</a>
 </section>
 
 <section class="c-landing__demo">
@@ -16,54 +16,36 @@
 </section>
 
 <section class="c-landing__make-it-work">
-  <h2 class="c-landing__make-it-work__heading c-title-s" id="make-it-work-for-you">What it looks like</a></h2>
+  <h2 class="c-landing__make-it-work__heading c-title-s" id="make-it-work-for-you">Make it work for you</a></h2>
   <form class="c-landing__make-it-work__form">
     <input class="c-landing__make-it-work__form__input c-landing__make-it-work__form__input--text"type="text" placeholder="@your_username">
     <input class="c-landing__make-it-work__form__input c-btn c-btn--primary" type="submit" value="Go">
   </form>
 </section>
 
-
-<section class="section">
-
-  <h1>
-    Welcome to Medium followers,
-  </h1>
-
-  <div class="widget-display"></div>
-
-  <form class="submit-widget">
-    <input name="username" type="text" value="@hugo__df">
-    <button>Show me my followers</button>
-  </form>
-
-  <script>
-    (function (document) {
-      const submitForm = document.querySelector('.submit-widget');
-      const widgetDisplay = document.querySelector('.widget-display');
-
-      function fetchAndDisplayWidget() {
-        const username = submitForm.querySelector('[name="username"]').value;
-        widgetDisplay.innerHTML = '<span class="loading">Loading</span>';
-        post('/api/following-follower-count', { username })
-          .then(data => data.json())
-          .then(({ following, userFollowerCount }) => {
-            const userFollowers = `<h2>${username} has ${userFollowerCount} followers</h2>`;
-            const followerList = `<br/>Here are the stats of some of the people they follow: <ul>${following.map(({ user, followers }) => `<li>${user}: ${followers}<li>`).join('')}</ul>`;
-            widgetDisplay.innerHTML = userFollowers + followerList;
-          });
-      }
-      const listener = submitForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        fetchAndDisplayWidget();
-        return false;
-      });
-      {{!-- fetchAndDisplayWidget(); --}}
-    })(document)
-  </script> {{#if isAuthed}} For your statistics:
-  <a href="/dashboard">Go to dashboard</a>
-  {{else}} To start:
-  <a href="/login/medium">Log in with Medium</a>
-  {{/if}}
+<section class="c-landing__what-it-does">
+  <h2 class="c-landing__what-it-does__heading c-title-s">What it does for you</h2>
+  <ul class="c-landing__what-it-does__card-container">
+    <li class="c-landing__what-it-does__card">
+      <svg>
+        <use href="#chart-icon"></use>
+      </svg>
+      <h3 class="c-landing__what-it-does__card__heading c-title-s">Track growth</h3>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque iaculis, libero eget vehicula laoreet, neque metus rutrum elit, eu semper augue velit vel augue. In volutpat nec sem nec varius. Ut ultrices nisl eget diam imperdiet volutpat. In vel massa rhoncus, sagittis massa sed, placerat massa. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras leo sem, semper id finibus id, euismod eget augue. Aliquam odio dui, bibendum vitae porttitor vitae, varius at lectus. In sit amet nulla vitae odio interdum rutrum.</p>
+    </li>
+    <li class="c-landing__what-it-does__card">
+      <svg>
+        <use href="#analysis-icon"></use>
+      </svg>
+      <h3 class="c-landing__what-it-does__card__heading c-title-s">Check on your friends and competitors</h3>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque iaculis, libero eget vehicula laoreet, neque metus rutrum elit, eu semper augue velit vel augue. In volutpat nec sem nec varius. Ut ultrices nisl eget diam imperdiet volutpat. In vel massa rhoncus, sagittis massa sed, placerat massa. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras leo sem, semper id finibus id, euismod eget augue. Aliquam odio dui, bibendum vitae porttitor vitae, varius at lectus. In sit amet nulla vitae odio interdum rutrum.</p>
+    </li>
+    <li class="c-landing__what-it-does__card">
+      <svg>
+        <use href="#strategy-icon"></use>
+      </svg>
+      <h3 class="c-landing__what-it-does__card__heading c-title-s">Gain new content insights *</h3>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque iaculis, libero eget vehicula laoreet, neque metus rutrum elit, eu semper augue velit vel augue. In volutpat nec sem nec varius. Ut ultrices nisl eget diam imperdiet volutpat. In vel massa rhoncus, sagittis massa sed, placerat massa. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras leo sem, semper id finibus id, euismod eget augue. Aliquam odio dui, bibendum vitae porttitor vitae, varius at lectus. In sit amet nulla vitae odio interdum rutrum.</p>
+    </li>
+  </ul>
 </section>
