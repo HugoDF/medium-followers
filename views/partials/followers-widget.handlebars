@@ -1,0 +1,35 @@
+<section class="section">
+
+  <div class="widget-display"></div>
+
+  <form class="submit-widget">
+    <input name="username" type="text" value="@hugo__df">
+    <button>Show me my followers</button>
+  </form>
+
+  <script>
+    (function (document) {
+      const submitForm = document.querySelector('.submit-widget');
+      const widgetDisplay = document.querySelector('.widget-display');
+
+      function fetchAndDisplayWidget() {
+        const username = submitForm.querySelector('[name="username"]').value;
+        widgetDisplay.innerHTML = '<span class="loading">Loading</span>';
+        post('/api/following-follower-count', { username })
+          .then(data => data.json())
+          .then(({ following, userFollowerCount }) => {
+            const userFollowers = `<h2>${username} has ${userFollowerCount} followers</h2>`;
+            const followerList = `<br/>Here are the stats of some of the people they follow: <ul>${following.map(({ user, followers }) => `<li>${user}: ${followers}<li>`).join('')}</ul>`;
+            widgetDisplay.innerHTML = userFollowers + followerList;
+          });
+      }
+      const listener = submitForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        fetchAndDisplayWidget();
+        return false;
+      });
+      fetchAndDisplayWidget();
+    })(document)
+  </script>
+</section>

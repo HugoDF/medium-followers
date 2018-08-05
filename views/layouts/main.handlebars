@@ -3,48 +3,36 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>Medium Followers</title>
-  <meta name="description" content="Track your number of followers on Medium">
+  <title>Mediumlytics</title>
+  <meta name="description" content="Medium statistics to help you grow">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <link rel="manifest" href="site.webmanifest">
-  <link rel="apple-touch-icon" href="icon.png">
+  {{!-- <link rel="manifest" href="site.webmanifest"> --}}
+  {{!-- <link rel="apple-touch-icon" href="icon.png"> --}}
   <!-- Place favicon.ico in the root directory -->
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+  {{> reset.css }}
+  {{> styles.css }}
 </head>
 
 <body>
   <!--[if lte IE 9]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
         <![endif]-->
-  <nav class="navbar-container">
-
-    <a role="button" class="navbar-burger is-active" data-target="navMenu" aria-label="menu" aria-expanded="false">
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-    </a>
-    <div class="navbar-brand">
-      <a class="navbar-item" href="/">Medium Followers</a>
-
-      {{#if isAuthed}}
-      <div>
-        Logged in as:
-        <a href="{{auth.url}}">{{auth.name}} @{{auth.username}}
-          <img width="50px" src={{auth.imageUrl}} />
-        </a>
+  <nav class="c-nav">
+    <div class="c-nav__inner">
+      <img
+        class="c-nav__logo"
+        src="/public/mediumlytics-logo.jpg"
+        alt="Mediumlytics logo">
+      <a class="c-nav__link c-title-m" href="/">Mediumlytics</a>
+      <div class="c-nav__right">
+        {{#if isAuthed}}
+          <a class="c-nav__link" href="/dashboard">Me</a>
+          <a class="c-nav__link" href="/logout">Log out</a>
+        {{else}}
+          <a class="c-nav__link" href="/login/medium">Sign in</a>
+        {{/if}}
       </div>
-      <div class="navbar-menu is-active" id="navMenu">
-        <a class="navbar-item" href="/logout">Log out</a>
-        <a class="navbar-item" href="/dashboard">Statistics</a>
-      </div>
-
-      {{else}}
-      <div class="navbar-menu is-active" id="navMenu">
-        <a class="navbar-item navbar-end" href="/login/medium">Log in with Medium</a>
-      </div>
-      {{/if}}
     </div>
   </nav>
 
@@ -61,35 +49,16 @@
         ...options
       })
     }
-  </script> {{{ body }}}
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-
-      // Get all "navbar-burger" elements
-      var $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
-
-      // Check if there are any navbar burgers
-      if ($navbarBurgers.length > 0) {
-
-        // Add a click event on each of them
-        $navbarBurgers.forEach(function ($el) {
-          $el.addEventListener('click', function () {
-
-            // Get the target from the "data-target" attribute
-            var target = $el.dataset.target;
-            var $target = document.getElementById(target);
-
-            // Toggle the class on both the "navbar-burger" and the "navbar-menu"
-            $el.classList.toggle('is-active');
-            $target.classList.toggle('is-active');
-
-          });
-        });
-      }
-
-    });
   </script>
+  <div class="c-content">
+    {{{ body }}}
+  </div>
+
+
+  <div style="display: none">
+    {{> svgs }}
+  </div>
+
   <script async src="//simplewebsiteanalytics.com/hello.js"></script>
   <noscript><img src="//simplewebsiteanalytics.com/hello.gif" alt=""></noscript>
 </body>
