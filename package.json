@@ -17,19 +17,21 @@
     "uuid": "^3.2.1"
   },
   "engines": {
-    "node": "9.x"
+    "node": "10.x"
   },
   "scripts": {
     "start": "node server.js",
     "dev": "NODE_ENV=development nodemon server.js",
-    "collect": "node ./collectFollowers"
+    "collect": "node ./collectFollowers",
+    "deploy": "now && now alias && now rm medium-followers --safe"
   },
   "author": "Hugo Di Francesco",
   "license": "MIT",
   "devDependencies": {
     "browser-sync": "^2.24.6",
     "localtunnel": "^1.9.0",
-    "nodemon": "^1.18.3"
+    "nodemon": "^1.18.3",
+    "now": "^11.3.9"
   },
   "now": {
     "alias": [
