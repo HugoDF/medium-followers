@@ -67,7 +67,12 @@ async function getAllUsers() {
   return (await fetchAllRecords(
     usersBase.select({})
   )).map(
-    (user) => ({ username: user.get('username'), id: user.get('id') })
+    (user) => ({
+      username: user.get('username'),
+      id: user.get('id'),
+      isRegistered: Boolean(user.get('accessToken')),
+      highestFollowerCount: user.get('highestFollowerCount')
+    })
   );
 }
 function createUser(id, username, url, imageUrl, accessToken) {

@@ -4,7 +4,10 @@ const FollowerCount = require('./models');
 const { user } = require('./models');
 
 async function main() {
-  const users = await user.all();
+  // Fetch if user has signed up or has had more than 200 followers at some point
+  const users = (await user.all()).filter(
+    ({ highestFollowerCount, isRegistered }) => isRegistered || highestFollowerCount > 200
+  );
   console.log(`Running follower count collection for ${users.length} users`);
   return Promise.all(
     users
