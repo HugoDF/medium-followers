@@ -17,7 +17,7 @@ function getFollowedByCount({ payload } = {}) {
 }
 
 function getFollowersForUser(username) {
-  return axios(`https://medium.com/@${username}?format=json`)
+  return axios.get(`https://medium.com/@${username}?format=json`)
     .then( ({ data }) => data.replace(HIJACKING_PREFIX, '') )
     .then( JSON.parse )
     .then( getFollowedByCount )
