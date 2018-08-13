@@ -1,13 +1,9 @@
 <section class="c-landing__hero c-hero-pattern">
-  <img class="c-landing__hero__logo" src="/public/mediumlytics-logo.png">
-  <h1 class="c-landing__hero__heading">Mediumlytics</h1>
-
   <blockquote class="c-landing__hero__tagline">
-    Understand how the top Medium creators do it,
-    <br/> statistics designed to help you grow
+    Understand how the top Medium creators do it with statistics designed to help you grow
   </blockquote>
 
-  <a class="c-btn c-btn--primary" href="/#make-it-work-for-you">Try now</a>
+  <a class="c-btn c-btn--primary c-btn--hero" href="/#make-it-work-for-you">Try now</a>
 </section>
 
 <section class="c-landing__demo">
@@ -24,7 +20,8 @@
     Make it work for you
   </h2>
   <form class="c-landing__cta-section__form">
-    <input class="c-landing__cta-section__form__input c-landing__cta-section__form__input--text" type="text" placeholder="@your_username">
+    <label class="c-landing-cta-section__label" for="cta-section__form">Username: </label>
+    <input id="cta-section__form" class="c-landing__cta-section__form__input c-landing__cta-section__form__input--text" type="text" placeholder="@your_username">
     <input class="c-landing__cta-section__form__input c-btn c-btn--primary" type="submit" value="Go">
   </form>
 </section>
@@ -39,13 +36,9 @@
         </svg>
         Track growth
       </h3>
-      {{!-- <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque iaculis, libero eget vehicula laoreet, neque metus
-        rutrum elit, eu semper augue velit vel augue. In volutpat nec sem nec varius. Ut ultrices nisl eget diam imperdiet
-        volutpat. In vel massa rhoncus, sagittis massa sed, placerat massa. Pellentesque habitant morbi tristique senectus
-        et netus et malesuada fames ac turpis egestas. Cras leo sem, semper id finibus id, euismod eget augue. Aliquam odio
-        dui, bibendum vitae porttitor vitae, varius at lectus. In sit amet nulla vitae odio interdum rutrum.
-      </p> --}}
+      <p class="c-landing__what-it-does__card__content">
+        See your growth on Medium day to day, follower by follower.
+      </p>
     </li>
     <li class="c-landing__what-it-does__card">
       <h3 class="c-landing__what-it-does__card__heading c-title-s">
@@ -54,28 +47,20 @@
         </svg>
         Check on your friends and competitors
       </h3>
-      {{!-- <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque iaculis, libero eget vehicula laoreet, neque metus
-        rutrum elit, eu semper augue velit vel augue. In volutpat nec sem nec varius. Ut ultrices nisl eget diam imperdiet
-        volutpat. In vel massa rhoncus, sagittis massa sed, placerat massa. Pellentesque habitant morbi tristique senectus
-        et netus et malesuada fames ac turpis egestas. Cras leo sem, semper id finibus id, euismod eget augue. Aliquam odio
-        dui, bibendum vitae porttitor vitae, varius at lectus. In sit amet nulla vitae odio interdum rutrum.
-      </p> --}}
+      <p class="c-landing__what-it-does__card__content">
+        See how fast you're growing compared to writers from your your space or who you follow.
+      </p>
     </li>
-    <li class="c-landing__what-it-does__card">
+    <li class="c-landing__what-it-does__card c-landing__what-it-does__card--coming-soon">
       <h3 class="c-landing__what-it-does__card__heading c-title-s">
         <svg class="c-landing__what-it-does__card__icon">
           <use href="#strategy-icon"></use>
         </svg>
         Gain new content insights*
       </h3>
-      {{!-- <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque iaculis, libero eget vehicula laoreet, neque metus
-        rutrum elit, eu semper augue velit vel augue. In volutpat nec sem nec varius. Ut ultrices nisl eget diam imperdiet
-        volutpat. In vel massa rhoncus, sagittis massa sed, placerat massa. Pellentesque habitant morbi tristique senectus
-        et netus et malesuada fames ac turpis egestas. Cras leo sem, semper id finibus id, euismod eget augue. Aliquam odio
-        dui, bibendum vitae porttitor vitae, varius at lectus. In sit amet nulla vitae odio interdum rutrum.
-      </p> --}}
+      <p class="c-landing__what-it-does__card__content">
+        Understand your audience with better data around the 👏 &rarr; follow &rarr; 👏👏👏 cycle.
+      </p>
     </li>
   </ul>
 </section>
@@ -83,7 +68,8 @@
 <section class="c-landing__cta-section">
   <h2 class="c-landing__cta-section__heading c-title-m">Start tracking your Medium statistics</h2>
   <form class="c-landing__cta-section__form">
-    <input class="c-landing__cta-section__form__input c-landing__cta-section__form__input--text" type="text" placeholder="@your_username">
+    <label class="c-landing-cta-section__label" for="cta-section__username">Username: </label>
+    <input id="cta-section__username" class="c-landing__cta-section__form__input c-landing__cta-section__form__input--text" type="text" placeholder="@your_username">
     <input class="c-landing__cta-section__form__input c-btn c-btn--primary" type="submit" value="Go">
   </form>
 </section>
