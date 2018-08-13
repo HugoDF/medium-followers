@@ -7,7 +7,7 @@ const listener = app.listen(process.env.PORT, function () {
     const port = parseInt(process.env.PORT, 10);
     const browserSync = require('browser-sync');
     browserSync({
-      files: ['views/**/*.{handlebars}'],
+      files: ['views/**/*.{handlebars}', './static/*.css'],
       online: false,
       open: false,
       port: port + 1,
